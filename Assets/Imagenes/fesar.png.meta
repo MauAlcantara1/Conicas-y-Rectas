@@ -161,6 +161,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -485,7 +498,21 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      fesar_0: 5825758236261839571
+      fesar_1: 9006276393617487412
+      fesar_10: -8209115360937135034
+      fesar_11: -816543565406267725
+      fesar_12: -9177059402611921701
+      fesar_13: 6703007978957166573
+      fesar_2: -2405817969865040812
+      fesar_3: -100862662757100725
+      fesar_4: 2523079944834002101
+      fesar_5: -4320408942913044446
+      fesar_6: -280624655251646007
+      fesar_7: 8845817620089658450
+      fesar_8: -8615846281607639352
+      fesar_9: -8856073638993882005
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
