@@ -193,6 +193,21 @@ public class Conicas : MonoBehaviour
         DibujarConicas();
     }
 
+    private Vector3[] CreaParabola(float a, float b, float h, float k, float thetha, int resolucion)
+    {
+        posPuntos = new Vector3[resolucion + 1];
+        Quaternion q = Quaternion.AngleAxis(thetha, Vector3.forward);
+        Vector3 centro = new Vector3(h, k, 0);
+
+        for (int i = 0; i <= resolucion; i++)
+        {
+            float angulo = ((float)i / (float)resolucion * 2 * Mathf.PI);
+            posPuntos[i] = new Vector3(i-(resolucion/2), (1/(4*p)) =  Mathf.Pow(i - (resolucion / 2), 2), 0);
+            posPuntos[i] = q * posPuntos[i] + vertice;
+        }
+        return posPuntos;
+    }
+
     public void BtnHiperbola()
     {
         conicaSeleccionada = 5;
