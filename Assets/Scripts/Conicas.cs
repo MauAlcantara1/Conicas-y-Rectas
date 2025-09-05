@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System; 
+
 
 public class Conicas : MonoBehaviour
 {
+    public LineRenderer lrParabola;      // Para parábola
+    public LineRenderer lrHiperbolaRama1; // Para hipérbola rama derecha
+    public LineRenderer lrHiperbolaRama2;
     public TextMeshProUGUI txtConicas;
     private int conicaSeleccionada = 0; // 0-Sin seleccionar, 1-Recta, 2-Circunferencia, 3-Elipse, 4-Parábola, 5-Hiperbola
 
@@ -44,7 +49,6 @@ public class Conicas : MonoBehaviour
         if (conicaSeleccionada != 0)
         {
             LineRenderer lr = GetComponent<LineRenderer>();
-            lr.SetVertexCount(resolucion + 1);
 
             a = sl_a.value;
             b = sl_b.value;
@@ -54,7 +58,7 @@ public class Conicas : MonoBehaviour
 
             switch (conicaSeleccionada)
             {
-                case 1: //Recta
+                case 1: // Recta
                     txtConicas.text = "Recta";
                     lr.material = matRecta;
                     ResetSlidersEtiquetas();
@@ -67,7 +71,7 @@ public class Conicas : MonoBehaviour
                     posPuntos = CreaRecta(a, b, h, k, resolucion);
                     break;
 
-                case 2: //Circunferencia
+                case 2: // Circunferencia
                     txtConicas.text = "Circunferencia";
                     lr.material = matCircunferencia;
                     ResetSlidersEtiquetas();
@@ -76,37 +80,45 @@ public class Conicas : MonoBehaviour
                     lbl_b.text = "r";
                     lbl_t.gameObject.SetActive(false);
                     sl_t.gameObject.SetActive(false);
-
                     posPuntos = CreaCircunferencia(b, h, k, resolucion);
                     break;
 
-                case 3: //Elipse
+                case 3: // Elipse
                     txtConicas.text = "Elipse";
                     lr.material = matElipse;
                     ResetSlidersEtiquetas();
-
                     posPuntos = CreaElipse(a, b, h, k, t, resolucion);
                     break;
 
-                case 4: //Parábola
+                case 4: // Parábola
                     txtConicas.text = "Parábola";
                     lr.material = matParabola;
                     ResetSlidersEtiquetas();
+                    lbl_a.gameObject.SetActive(false);
+                    sl_a.gameObject.SetActive(false);
+                    lbl_b.text = "p";
+                    posPuntos = CreaParabola(b, h, k, t, resolucion);
                     break;
 
-                case 5: //Hiperbola
-                    txtConicas.text = "Hiperbola";
+                case 5: // Hipérbola
+                    txtConicas.text = "Hipérbola";
                     lr.material = matHiperbola;
                     ResetSlidersEtiquetas();
+                    posPuntos = CreaHiperbola(a, b, h, k, t, resolucion);
                     break;
             }
 
-            for (int i = 0; i <= resolucion; i++)
+            // Ajusta el LineRenderer para la cantidad correcta de puntos
+            lr.positionCount = posPuntos.Length;
+
+            // Asigna todos los puntos
+            for (int i = 0; i < posPuntos.Length; i++)
             {
                 lr.SetPosition(i, posPuntos[i]);
             }
         }
     }
+
 
     public void ResetSlidersEtiquetas()
     {
@@ -193,24 +205,61 @@ public class Conicas : MonoBehaviour
         DibujarConicas();
     }
 
-    private Vector3[] CreaParabola(float a, float b, float h, float k, float thetha, int resolucion)
+    private Vector3[] CreaParabola(float p, float h, float k, float thetha, int resolucion)
     {
         posPuntos = new Vector3[resolucion + 1];
         Quaternion q = Quaternion.AngleAxis(thetha, Vector3.forward);
-        Vector3 centro = new Vector3(h, k, 0);
+        Vector3 vertice = new Vector3(h, k, 0);
 
         for (int i = 0; i <= resolucion; i++)
         {
-            float angulo = ((float)i / (float)resolucion * 2 * Mathf.PI);
-            posPuntos[i] = new Vector3(i-(resolucion/2), (1/(4*p)) =  Mathf.Pow(i - (resolucion / 2), 2), 0);
+            float x = i - resolucion / 2f; 
+            float y = Mathf.Pow(x, 2) / (4 * p); 
+
+            posPuntos[i] = new Vector3(x, y, 0);
             posPuntos[i] = q * posPuntos[i] + vertice;
         }
         return posPuntos;
     }
+
+
+
 
     public void BtnHiperbola()
     {
         conicaSeleccionada = 5;
         DibujarConicas();
     }
+
+
+    private Vector3[] CreaHiperbola(float a, float b, float h, float k, float theta, int resolucion)
+    {
+        // Dos ramas
+        Vector3[] posPuntos = new Vector3[(resolucion + 1) * 2];
+        Quaternion q = Quaternion.AngleAxis(theta, Vector3.forward);
+        Vector3 centro = new Vector3(h, k, 0);
+
+        float rango = 2f; // controla cuánto se extiende la hipérbola
+
+        for (int i = 0; i <= resolucion; i++)
+        {
+            float t = Mathf.Lerp(-rango, rango, (float)i / resolucion);
+
+            float coshT = (float)Math.Cosh(t);
+            float sinhT = (float)Math.Sinh(t);
+
+            // Primera rama
+            Vector3 punto1 = new Vector3(a * coshT, b * sinhT, 0);
+            // Segunda rama (simétrica)
+            Vector3 punto2 = new Vector3(-a * coshT, -b * sinhT, 0);
+
+            posPuntos[i] = q * punto1 + centro;
+            posPuntos[i + resolucion + 1] = q * punto2 + centro;
+        }
+
+        return posPuntos;
+    }
+
+
+
 }
